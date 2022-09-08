@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Solid.Integrations.PlayHQ.WebhookReceiver\Solid.Integrations.PlayHQ.WebhookReceiver.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Helpers\TestData\formatted-score-event.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Helpers\TestData\score-event.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties helpers_4testdata_4score-event_1json__JsonSchema="{&quot;messageId&quot;:&quot;beb6587f-f1b6-449a-9651-57fc67378c9c&quot;,&quot;eventType&quot;:&quot;LIVE_GAME.SCORE_EVENT&quot;,&quot;entityId&quot;:&quot;92eeae47-ba77-4df0-8e65-803ea9118898&quot;,&quot;eventRaisedDateTime&quot;:&quot;2022-09-08T01:07:03.911Z&quot;,&quot;data&quot;:{&quot;eventId&quot;:&quot;59069123-e107-4d53-8c6d-cf907b81597f&quot;,&quot;gameId&quot;:&quot;a5ccbee6-7561-4d44-875c-ffca06ee26bc&quot;,&quot;timestamp&quot;:&quot;2022-09-08T01:07:03.727Z&quot;,&quot;eventStartTimestamp&quot;:null,&quot;gameTime&quot;:[{&quot;type&quot;:&quot;OVER_NUMBER&quot;,&quot;value&quot;:2},{&quot;type&quot;:&quot;TOTAL_BALLS&quot;,&quot;value&quot;:3},{&quot;type&quot;:&quot;LEGAL_BALLS&quot;,&quot;value&quot;:3}],&quot;event&quot;:{&quot;type&quot;:&quot;BALL&quot;,&quot;appearances&quot;:[{&quot;id&quot;:&quot;e7ea1fe9-d73f-4a6b-a7cc-8375de5971ef&quot;,&quot;role&quot;:&quot;BATTING&quot;,&quot;statistics&quot;:[{&quot;type&quot;:&quot;RUNS&quot;,&quot;value&quot;:1}]},{&quot;id&quot;:&quot;229e26a2-f3b4-4b8f-9e85-b66bc80d44b5&quot;,&quot;role&quot;:&quot;BOWLING&quot;,&quot;statistics&quot;:null}],&quot;teams&quot;:null,&quot;sharedStatistics&quot;:[]},&quot;periods&quot;:[{&quot;id&quot;:&quot;9507a755-f126-49b8-aa18-429a49c937e0&quot;,&quot;name&quot;:&quot;FIRST_INNINGS&quot;,&quot;sequenceNo&quot;:1,&quot;teams&quot;:[{&quot;id&quot;:&quot;79c5be87-1cf5-4e90-b2f9-533c2e419cfb&quot;,&quot;discipline&quot;:&quot;BATTING&quot;,&quot;status&quot;:null,&quot;statistics&quot;:[{&quot;type&quot;:&quot;TOTAL_OUTS&quot;,&quot;value&quot;:0},{&quot;type&quot;:&quot;TOTAL_SCORE&quot;,&quot;value&quot;:13},{&quot;type&quot;:&quot;TOTAL_OVERS&quot;,&quot;value&quot;:2.3},{&quot;type&quot;:&quot;OVER_LIMIT&quot;,&quot;value&quot;:0}],&quot;appearances&quot;:[{&quot;id&quot;:&quot;e7ea1fe9-d73f-4a6b-a7cc-8375de5971ef&quot;,&quot;displayOrder&quot;:2,&quot;status&quot;:&quot;ON_STRIKE&quot;,&quot;statistics&quot;:[{&quot;type&quot;:&quot;CURRENT_BALLS_FACED&quot;,&quot;value&quot;:6},{&quot;type&quot;:&quot;CURRENT_RUNS&quot;,&quot;value&quot;:6},{&quot;type&quot;:&quot;BALLS_FACED&quot;,&quot;value&quot;:6},{&quot;type&quot;:&quot;TOTAL_RUNS&quot;,&quot;value&quot;:6},{&quot;type&quot;:&quot;STRIKE_RATE&quot;,&quot;value&quot;:100}]},{&quot;id&quot;:&quot;c447af3c-5611-4b8b-b999-1dcb974d7b8f&quot;,&quot;displayOrder&quot;:1,&quot;status&quot;:&quot;NOT_ON_STRIKE&quot;,&quot;statistics&quot;:[{&quot;type&quot;:&quot;CURRENT_BALLS_FACED&quot;,&quot;value&quot;:9},{&quot;type&quot;:&quot;CURRENT_RUNS&quot;,&quot;value&quot;:7},{&quot;type&quot;:&quot;BALLS_FACED&quot;,&quot;value&quot;:9},{&quot;type&quot;:&quot;TOTAL_RUNS&quot;,&quot;value&quot;:7},{&quot;type&quot;:&quot;STRIKE_RATE&quot;,&quot;value&quot;:77.77}]}]},{&quot;id&quot;:&quot;b0af3f6b-dc14-4558-9a84-08bb7809269e&quot;,&quot;discipline&quot;:&quot;BOWLING&quot;,&quot;status&quot;:null,&quot;statistics&quot;:[{&quot;type&quot;:&quot;TOTAL_OUTS&quot;,&quot;value&quot;:0},{&quot;type&quot;:&quot;TOTAL_SCORE&quot;,&quot;value&quot;:0},{&quot;type&quot;:&quot;TOTAL_OVERS&quot;,&quot;value&quot;:0},{&quot;type&quot;:&quot;OVER_LIMIT&quot;,&quot;value&quot;:0}],&quot;appearances&quot;:[{&quot;id&quot;:&quot;229e26a2-f3b4-4b8f-9e85-b66bc80d44b5&quot;,&quot;displayOrder&quot;:3,&quot;status&quot;:&quot;BOWLING&quot;,&quot;statistics&quot;:[{&quot;type&quot;:&quot;CURRENT_BALLS&quot;,&quot;value&quot;:3},{&quot;type&quot;:&quot;RUNS&quot;,&quot;value&quot;:3},{&quot;type&quot;:&quot;OVERS&quot;,&quot;value&quot;:0.3},{&quot;type&quot;:&quot;ECONOMY&quot;,&quot;value&quot;:6},{&quot;type&quot;:&quot;OVERS_BOWLED&quot;,&quot;value&quot;:0}]}]}]}]}}" /></VisualStudio></ProjectExtensions>
+
+</Project>

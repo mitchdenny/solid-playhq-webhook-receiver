@@ -1,0 +1,188 @@
+{
+  "messageId": "beb6587f-f1b6-449a-9651-57fc67378c9c",
+  "eventType": "LIVE_GAME.SCORE_EVENT",
+  "entityId": "92eeae47-ba77-4df0-8e65-803ea9118898",
+  "eventRaisedDateTime": "2022-09-08T01:07:03.911Z",
+  "data": {
+    "eventId": "59069123-e107-4d53-8c6d-cf907b81597f",
+    "gameId": "a5ccbee6-7561-4d44-875c-ffca06ee26bc",
+    "timestamp": "2022-09-08T01:07:03.727Z",
+    "eventStartTimestamp": null,
+    "gameTime": [
+      {
+        "type": "OVER_NUMBER",
+        "value": 2
+      },
+      {
+        "type": "TOTAL_BALLS",
+        "value": 3
+      },
+      {
+        "type": "LEGAL_BALLS",
+        "value": 3
+      }
+    ],
+    "event": {
+      "type": "BALL",
+      "appearances": [
+        {
+          "id": "e7ea1fe9-d73f-4a6b-a7cc-8375de5971ef",
+          "role": "BATTING",
+          "statistics": [
+            {
+              "type": "RUNS",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": "229e26a2-f3b4-4b8f-9e85-b66bc80d44b5",
+          "role": "BOWLING",
+          "statistics": null
+        }
+      ],
+      "teams": null,
+      "sharedStatistics": []
+    },
+    "periods": [
+      {
+        "id": "9507a755-f126-49b8-aa18-429a49c937e0",
+        "name": "FIRST_INNINGS",
+        "sequenceNo": 1,
+        "teams": [
+          {
+            "id": "79c5be87-1cf5-4e90-b2f9-533c2e419cfb",
+            "discipline": "BATTING",
+            "status": null,
+            "statistics": [
+              {
+                "type": "TOTAL_OUTS",
+                "value": 0
+              },
+              {
+                "type": "TOTAL_SCORE",
+                "value": 13
+              },
+              {
+                "type": "TOTAL_OVERS",
+                "value": 2.3
+              },
+              {
+                "type": "OVER_LIMIT",
+                "value": 0
+              }
+            ],
+            "appearances": [
+              {
+                "id": "e7ea1fe9-d73f-4a6b-a7cc-8375de5971ef",
+                "displayOrder": 2,
+                "status": "ON_STRIKE",
+                "statistics": [
+                  {
+                    "type": "CURRENT_BALLS_FACED",
+                    "value": 6
+                  },
+                  {
+                    "type": "CURRENT_RUNS",
+                    "value": 6
+                  },
+                  {
+                    "type": "BALLS_FACED",
+                    "value": 6
+                  },
+                  {
+                    "type": "TOTAL_RUNS",
+                    "value": 6
+                  },
+                  {
+                    "type": "STRIKE_RATE",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "id": "c447af3c-5611-4b8b-b999-1dcb974d7b8f",
+                "displayOrder": 1,
+                "status": "NOT_ON_STRIKE",
+                "statistics": [
+                  {
+                    "type": "CURRENT_BALLS_FACED",
+                    "value": 9
+                  },
+                  {
+                    "type": "CURRENT_RUNS",
+                    "value": 7
+                  },
+                  {
+                    "type": "BALLS_FACED",
+                    "value": 9
+                  },
+                  {
+                    "type": "TOTAL_RUNS",
+                    "value": 7
+                  },
+                  {
+                    "type": "STRIKE_RATE",
+                    "value": 77.77
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "b0af3f6b-dc14-4558-9a84-08bb7809269e",
+            "discipline": "BOWLING",
+            "status": null,
+            "statistics": [
+              {
+                "type": "TOTAL_OUTS",
+                "value": 0
+              },
+              {
+                "type": "TOTAL_SCORE",
+                "value": 0
+              },
+              {
+                "type": "TOTAL_OVERS",
+                "value": 0
+              },
+              {
+                "type": "OVER_LIMIT",
+                "value": 0
+              }
+            ],
+            "appearances": [
+              {
+                "id": "229e26a2-f3b4-4b8f-9e85-b66bc80d44b5",
+                "displayOrder": 3,
+                "status": "BOWLING",
+                "statistics": [
+                  {
+                    "type": "CURRENT_BALLS",
+                    "value": 3
+                  },
+                  {
+                    "type": "RUNS",
+                    "value": 3
+                  },
+                  {
+                    "type": "OVERS",
+                    "value": 0.3
+                  },
+                  {
+                    "type": "ECONOMY",
+                    "value": 6
+                  },
+                  {
+                    "type": "OVERS_BOWLED",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
