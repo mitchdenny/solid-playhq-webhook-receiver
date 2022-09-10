@@ -16,17 +16,14 @@ public static class Program
 
         var app = builder.Build();
 
-        app.MapPost("/webhook/{webhookId}", async ([FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response) => {
+        app.MapPost("/webhook/{webhookId}", async ([FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response, CancellationToken cancellationToken) => {
 
-            var payload = body.RootElement.ToString();
-            var isSignatureValid = SignatureValidator.IsValidSignature(payload, "open sesame", signature);
-
-            if (isSignatureValid)
+            try
             {
-                await webhookRouter.RouteAsync(webhookId, body);
+                await webhookRouter.RouteAsync(webhookId, body, signature, cancellationToken);
                 response.StatusCode = 200;
             }
-            else
+            catch (WebhookRouterException ex) when (ex.Message == "Invalid signature.")
             {
                 response.StatusCode = 401;
             }
