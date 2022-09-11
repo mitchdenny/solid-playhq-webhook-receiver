@@ -19,7 +19,7 @@ jobs:
     - name: Build the Docker image
       run: docker build src/Solid.Integrations.PlayHQ.WebhookReceiver/. --tag solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
     - name: Azure Login
-      with:
+      env:
         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
