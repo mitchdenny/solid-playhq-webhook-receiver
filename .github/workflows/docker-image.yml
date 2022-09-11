@@ -26,3 +26,4 @@ jobs:
       run: |
         az login --service-principal --tenant $AZURE_TENANT_ID --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
         az group create --name playhq-webhook-receiver-development --location australiaeast
+        az deployment group create --resource-group playhq-webhook-receiver-development --name $GITHUB_SHA --template-file .\deploy\stage1.bicep
