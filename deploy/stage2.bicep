@@ -126,6 +126,12 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
             cpu: '0.25'
             memory: '0.5Gi'
           }
+          env: [
+            {
+              name: 'AZURE_CONFIG_URL'
+              value: appConfig.properties.endpoint
+            }
+          ]
         }
       ]
     }
