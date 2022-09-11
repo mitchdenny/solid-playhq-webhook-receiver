@@ -1,5 +1,6 @@
 param instanceName string = resourceGroup().name
 param instanceLocation string = resourceGroup().location
+param containerImage string
 
 resource appConfigDataReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '516239f1-63e1-4d78-a4de-a74fb236a071'
@@ -107,7 +108,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     configuration: {
       ingress: {
         external: true
-        targetPort: 80
+        targetPort: 3000
       }
       registries: [
         {
@@ -120,7 +121,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       containers: [
         {
           name: 'container${uniqueString(instanceName)}'
-          image: '${containerRegistry.properties.loginServer}/azuredocs/containerapps-helloworld:latest'
+          image: '${containerImage}'
           resources: {
             cpu: '0.25'
             memory: '0.5Gi'
