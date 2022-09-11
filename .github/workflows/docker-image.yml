@@ -11,11 +11,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    environment: Development
 
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build src/Solid.Integrations.PlayHQ.WebhookReceiver/. --tag solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
-    - name: Is Azure CLI command present
-      run: az --version
-    
+    - name: Azure Login
+      uses: Azure/login@v1.4.6
+      with:
+        tenant-id: $AZURE_TENANT_ID
+        client-id: $AZURE_CLIENT_ID
+        creds: $AZURE_CLIENT_SECRET
