@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using Solid.Integrations.PlayHQ.WebhookReceiver.Helpers;
 using Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting;
+using Azure.Identity;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
@@ -12,11 +15,32 @@ public static class Program
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Host.ConfigureAppConfiguration(builder =>
+        {
+            builder.AddAzureAppConfiguration(options =>
+            {
+                var configUrl = Environment.GetEnvironmentVariable("CONFIG_URL") ?? throw new ApplicationException();
+                options.Connect(new Uri(configUrl), new DefaultAzureCredential())
+                       .ConfigureKeyVault(keyVaultOptions =>
+                       {
+                           keyVaultOptions.SetCredential(new DefaultAzureCredential());
+                       })
+                       .ConfigureRefresh(refreshOptions =>
+                        {
+                            refreshOptions.Register("Refresh", true);
+                        });
+            });
+            builder.Build();
+        });
+
         builder.Services.AddLogging();
         builder.Services.AddMemoryCache();
-        builder.Services.AddSingleton<IWebhookRouter, WebhookRouter>();
+        builder.Services.AddWebhookRouter(builder.Configuration);
+        builder.Services.AddAzureAppConfiguration();
 
         var app = builder.Build();
+        app.UseAzureAppConfiguration();
 
         app.MapPost("/webhook/{webhookId}", async ([FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response, CancellationToken cancellationToken) => {
 
