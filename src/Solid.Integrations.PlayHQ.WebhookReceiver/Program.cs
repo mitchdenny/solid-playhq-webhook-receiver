@@ -9,9 +9,13 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
 public static class Program
 {
+
+
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddLogging();
+        builder.Services.AddMemoryCache();
         builder.Services.AddSingleton<IWebhookRouter, WebhookRouter>();
 
         var app = builder.Build();
