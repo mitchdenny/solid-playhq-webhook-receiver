@@ -9,8 +9,6 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
 public static class Program
 {
-
-
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +31,13 @@ public static class Program
             }
         });
 
-        await app.RunAsync("http://localhost:3000");
+        app.MapGet("/health", async (HttpResponse response) =>
+        {
+            response.StatusCode = 200;
+            await response.WriteAsync("Healthy!");
+        });
+
+        await app.RunAsync("http://*:3000");
 
         return 0;
     }

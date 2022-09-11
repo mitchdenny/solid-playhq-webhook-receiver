@@ -1,19 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solid.Integrations.PlayHQ.WebhookReceiver", "Solid.Integrations.PlayHQ.WebhookReceiver\Solid.Integrations.PlayHQ.WebhookReceiver.csproj", "{91BBFDAE-55F4-4E0F-A0A1-F798C72729FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solid.Integrations.PlayHQ.WebhookReceiver", "Solid.Integrations.PlayHQ.WebhookReceiver\Solid.Integrations.PlayHQ.WebhookReceiver.csproj", "{91BBFDAE-55F4-4E0F-A0A1-F798C72729FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solid.Integrations.PlayHQ.WebhookReceiver.Tests", "Solid.Integrations.PlayHQ.WebhookReceiver.Tests\Solid.Integrations.PlayHQ.WebhookReceiver.Tests.csproj", "{4CA152B3-23E7-42A7-96B6-04D1110573F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solid.Integrations.PlayHQ.WebhookReceiver.Tests", "Solid.Integrations.PlayHQ.WebhookReceiver.Tests\Solid.Integrations.PlayHQ.WebhookReceiver.Tests.csproj", "{4CA152B3-23E7-42A7-96B6-04D1110573F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{91BBFDAE-55F4-4E0F-A0A1-F798C72729FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +21,11 @@ Global
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1126AA13-2A63-43A0-BB5C-2896E7F0CBD5}
 	EndGlobalSection
 EndGlobal
