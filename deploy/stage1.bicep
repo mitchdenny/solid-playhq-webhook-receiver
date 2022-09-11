@@ -34,3 +34,5 @@ resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
   scope: containerRegistry
 }
+
+output containerRegistryLoginServer string = containerRegistry.properties.loginServer
