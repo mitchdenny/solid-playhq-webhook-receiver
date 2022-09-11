@@ -21,7 +21,7 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' =
     name: 'Standard'
   }
   identity: {
-    type: 'SystemAssigned'
+    type: 'None'
   }
 }
 
@@ -51,7 +51,7 @@ resource keyVaultSecretsUserRoleDefinition 'Microsoft.Authorization/roleDefiniti
 resource keyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, uniqueString(instanceName), keyVaultSecretsUserRoleDefinition.id)
   properties: {
-    principalId: appConfig.identity.principalId
+    principalId: containerApp.identity.principalId
     roleDefinitionId: keyVaultSecretsUserRoleDefinition.id
   }
   scope: keyVault
