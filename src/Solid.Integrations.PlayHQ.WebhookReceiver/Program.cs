@@ -31,6 +31,7 @@ public static class Program
                        })
                        .ConfigureRefresh(refreshOptions =>
                         {
+                            refreshOptions.SetCacheExpiration(TimeSpan.FromSeconds(30));
                             refreshOptions.Register("Refresh", true);
                         });
 
@@ -47,6 +48,11 @@ public static class Program
         var app = builder.Build();
         app.UseAzureAppConfiguration();
 
+        app.Use((context, next) =>
+        {
+            return next(context);
+        });
+
         app.MapPost("/webhook/{webhookId}", async ([FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response, CancellationToken cancellationToken) => {
 
             try
@@ -60,7 +66,14 @@ public static class Program
             }
         });
 
-        app.MapGet("/health", async (HttpResponse response) =>
+        app.MapGet("/liveness", async (HttpResponse response) =>
+        {
+            await refresher.RefreshAsync();
+            response.StatusCode = 200;
+            await response.WriteAsync("Healthy!");
+        });
+
+        app.MapGet("/readiness", async (HttpResponse response) =>
         {
             await refresher.RefreshAsync();
             response.StatusCode = 200;

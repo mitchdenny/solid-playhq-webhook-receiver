@@ -127,6 +127,26 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
               value: appConfig.properties.endpoint
             }
           ]
+          probes: [
+            {
+              type: 'Liveness'
+              httpGet: {
+                path: '/liveness'
+                port: 3000
+              }
+              initialDelaySeconds: 7
+              periodSeconds: 3
+            }
+            {
+              type: 'Readiness'
+              httpGet: {
+                path: '/readiness'
+                port: 3000
+              }
+              initialDelaySeconds: 30
+              periodSeconds: 3
+            }
+          ]
         }
       ]
     }
