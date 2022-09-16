@@ -7,11 +7,14 @@ using Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Extensions.Options;
 
 namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
 public static class Program
 {
+    private static IConfigurationRefresher refresher;
+
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +33,8 @@ public static class Program
                         {
                             refreshOptions.Register("Refresh", true);
                         });
+
+                refresher = options.GetRefresher();
             });
             builder.Build();
         });
@@ -57,6 +62,7 @@ public static class Program
 
         app.MapGet("/health", async (HttpResponse response) =>
         {
+            await refresher.RefreshAsync();
             response.StatusCode = 200;
             await response.WriteAsync("Healthy!");
         });
