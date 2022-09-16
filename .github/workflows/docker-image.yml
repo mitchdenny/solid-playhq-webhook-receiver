@@ -25,7 +25,7 @@ jobs:
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       run: |
         az login --service-principal --tenant $AZURE_TENANT_ID --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
-        az group create --name playhq-webhook-receiver-development4 --location australiaeast
+        az group create --name playhq-webhook-receiver-development4 --location westus3
         az deployment group create --resource-group playhq-webhook-receiver-development4 --name stage1_$GITHUB_SHA --template-file deploy/stage1.bicep
         ACR_NAME=$(az deployment group show -g playhq-webhook-receiver-development4  -n stage1_$GITHUB_SHA --query properties.outputs.containerRegistryLoginServer.value --output tsv)
         az acr login --name $ACR_NAME
