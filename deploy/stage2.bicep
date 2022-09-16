@@ -128,7 +128,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           env: [
             {
-              name: 'AZURE_CONFIG_URL'
+              name: 'CONFIG_URL'
               value: appConfig.properties.endpoint
             }
           ]

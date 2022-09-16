@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
+using Microsoft.Extensions.Options;
 using Solid.Integrations.PlayHQ.WebhookReceiver.Helpers;
 using System.Security.Cryptography.Xml;
 using System.Text.Json;
