@@ -2,11 +2,6 @@ param instanceName string = resourceGroup().name
 param instanceLocation string = resourceGroup().location
 param containerImage string
 
-resource appConfigDataReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
-  name: '516239f1-63e1-4d78-a4de-a74fb236a071'
-  scope: subscription()
-}
-
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
   name: 'registry${uniqueString(instanceName)}'
 }
@@ -138,11 +133,17 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   }
 }
 
+resource appConfigDataReaderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '516239f1-63e1-4d78-a4de-a74fb236a071'
+  scope: subscription()
+}
+
 resource appConfigDataReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, uniqueString(instanceName), appConfigDataReaderRoleDefinition.id)
   properties: {
     principalId: containerApp.identity.principalId
     roleDefinitionId: appConfigDataReaderRoleDefinition.id
+    principalType: 'ServicePrincipal'
   }
   scope: appConfig
 }
