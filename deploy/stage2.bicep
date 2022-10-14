@@ -1,6 +1,7 @@
 param instanceName string = resourceGroup().name
 param instanceLocation string = resourceGroup().location
 param containerImage string
+param eventHubNamespaceCount int
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
   name: 'registry${uniqueString(instanceName)}'
@@ -171,8 +172,8 @@ resource appConfigDataReaderRoleAssignment 'Microsoft.Authorization/roleAssignme
   scope: appConfig
 }
 
-resource eventHubsNamespace 'Microsoft.EventHub/namespaces@2022-01-01-preview' = {
-  name: 'eventhub${uniqueString(instanceName)}'
+resource eventHubsNamespace 'Microsoft.EventHub/namespaces@2022-01-01-preview' = [for i in range(0, eventHubNamespaceCount): {
+  name: 'eventhub${uniqueString(instanceName, string(i))}'
   location: instanceLocation
   tags: {
     instanceName: instanceName
@@ -182,7 +183,7 @@ resource eventHubsNamespace 'Microsoft.EventHub/namespaces@2022-01-01-preview' =
     name: 'Basic'
     tier: 'Basic'
   }
-}
+}]
 
 resource eventHubDataSenderRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '2b629674-e913-4c01-ae53-ef4638d8f975'
