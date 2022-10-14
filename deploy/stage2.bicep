@@ -177,6 +177,7 @@ resource eventHubsNamespace 'Microsoft.EventHub/namespaces@2022-01-01-preview' =
   location: instanceLocation
   tags: {
     instanceName: instanceName
+    stamp: string(i)
   }
   sku: {
     capacity: 1
