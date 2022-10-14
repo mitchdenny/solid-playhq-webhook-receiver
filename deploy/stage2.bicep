@@ -190,12 +190,12 @@ resource eventHubDataSenderRoleDefinition 'Microsoft.Authorization/roleDefinitio
   scope: subscription()
 }
 
-resource eventHubDataSenderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource eventHubDataSenderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for i in range(0, eventHubNamespaceCount): {
   name: guid(resourceGroup().id, uniqueString(instanceName), eventHubDataSenderRoleDefinition.id)
   properties: {
     principalId: containerApp.identity.principalId
     roleDefinitionId: eventHubDataSenderRoleDefinition.id
   }
-  scope: eventHubsNamespace
-}
+  scope: eventHubsNamespace[i]
+}]
 
