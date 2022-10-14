@@ -25,11 +25,11 @@ jobs:
         AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       run: |
         az login --service-principal --tenant $AZURE_TENANT_ID --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
-        az group create --name playhq-webhook-receiver-development5 --location westus3
-        az deployment group create --resource-group playhq-webhook-receiver-development5 --name stage1_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --template-file deploy/stage1.bicep
-        ACR_NAME=$(az deployment group show -g playhq-webhook-receiver-development5  -n stage1_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --query properties.outputs.containerRegistryLoginServer.value --output tsv)
+        az group create --name playhq-webhook-receiver-development --location westus3
+        az deployment group create --resource-group playhq-webhook-receiver-development --name stage1_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --template-file deploy/stage1.bicep
+        ACR_NAME=$(az deployment group show -g playhq-webhook-receiver-development  -n stage1_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --query properties.outputs.containerRegistryLoginServer.value --output tsv)
         az acr login --name $ACR_NAME
         docker tag solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA $ACR_NAME/solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
         docker push $ACR_NAME/solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
-        az deployment group create --resource-group playhq-webhook-receiver-development5 --name stage2_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --template-file deploy/stage2.bicep --parameters containerImage=$ACR_NAME/solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
+        az deployment group create --resource-group playhq-webhook-receiver-development --name stage2_$GITHUB_RUN_ID\_$GITHUB_RUN_ATTEMPT\_$GITHUB_SHA --template-file deploy/stage2.bicep --parameters containerImage=$ACR_NAME/solid/integrations/play-hq/webhook-receiver:$GITHUB_SHA
 
