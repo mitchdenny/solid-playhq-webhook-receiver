@@ -69,7 +69,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
 
         private EventHubProducerClient GetEventHubProducerClient(string eventHubsNamespace, string eventHubName)
         {
-            var cacheKey = $"EventHubProducerClientCacheKey_${eventHubsNamespace}_${eventHubName}";
+            var cacheKey = $"EventHubProducerClientCacheKey_{eventHubsNamespace}_{eventHubName}";
 
             logger.LogInformation("Getting EventHubProducerClient for cache key {cacheKey}", cacheKey);
             var client = memoryCache.GetOrCreate(cacheKey, (entry) =>
