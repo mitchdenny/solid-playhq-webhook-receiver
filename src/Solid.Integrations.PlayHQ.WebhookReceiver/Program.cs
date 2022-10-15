@@ -11,11 +11,12 @@ using Microsoft.Extensions.Options;
 
 namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
-public static class Program
+public class Program
 {
-    private static IConfigurationRefresher refresher;
+    private static IConfigurationRefresher? refresher;
 
     public static async Task<int> Main(string[] args)
+
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +54,7 @@ public static class Program
             return next(context);
         });
 
-        app.MapPost("/webhook/{webhookId}", async ([FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response, CancellationToken cancellationToken) => {
+        app.MapPost("/webhook/{webhookId}", async ([FromServices]ILogger<Program> logger, [FromServices]IWebhookRouter webhookRouter, [FromRoute]Guid webhookId, [FromBody]JsonDocument body, [FromHeader(Name = "Signature")]string signature, HttpResponse response, CancellationToken cancellationToken) => {
 
             try
             {
@@ -64,17 +65,44 @@ public static class Program
             {
                 response.StatusCode = 401;
             }
+            catch (WebhookRouterException ex) when (ex.Message == "No routing rule.")
+            {
+                response.StatusCode = 404;
+            }
+            catch (WebhookRouterException ex) when (ex.Message == "No playing surface mapping.")
+            {
+                response.StatusCode = 200; // Eat this for now, we may want to avoid using exceptions for this in the 
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unknown error occured processing webhook.");
+                response.StatusCode = 500;
+            }
         });
 
-        app.MapGet("/liveness", async (HttpResponse response) =>
+        app.MapGet("/liveness", async ([FromServices] ILogger<Program> logger, HttpResponse response) =>
         {
+            if (refresher == null)
+            {
+                logger.LogError("Refresher is null.");
+                response.StatusCode = 500;
+                return;
+            }
+
             await refresher.RefreshAsync();
             response.StatusCode = 200;
             await response.WriteAsync("Healthy!");
         });
 
-        app.MapGet("/readiness", async (HttpResponse response) =>
+        app.MapGet("/readiness", async ([FromServices] ILogger<Program> logger, HttpResponse response) =>
         {
+            if (refresher == null)
+            {
+                logger.LogError("Refresher is null.");
+                response.StatusCode = 500;
+                return;
+            }
+
             await refresher.RefreshAsync();
             response.StatusCode = 200;
             await response.WriteAsync("Healthy!");

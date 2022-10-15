@@ -3,9 +3,10 @@
     public class WebhookRoutingOptions
     {
         public const string WebhookRoutingOptionsSectionKey = "WebhookRouting";
-        public string Option1 { get; set; }
-        public string Option2 { get; set; }
+        public string? WebhookSecret { get; set; }
 
-        public string WebhookSecret { get; set; }
+        public int EventHubClientCacheSlidingExpirationSeconds { get; set; } = 3600;
+
+        public Dictionary<string, RoutingRule>? Rules { get; set; }
     }
 }
