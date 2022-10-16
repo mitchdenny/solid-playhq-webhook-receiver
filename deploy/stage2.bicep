@@ -66,6 +66,19 @@ resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
   }
 }
 
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: 'insights${uniqueString(instanceName)}'
+  location: instanceLocation
+  tags: {
+    instanceName: instanceName
+  }
+  kind: 'other'
+  properties: {
+    Application_Type: 'other'
+    WorkspaceResourceId: logWorkspace.id
+  }
+}
+
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: 'env${uniqueString(instanceName)}'
   location: instanceLocation
