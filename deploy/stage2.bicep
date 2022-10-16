@@ -140,6 +140,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
               name: 'CONFIG_URL'
               value: appConfig.properties.endpoint
             }
+            {
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              value: appInsights.properties.ConnectionString
+            }
           ]
           probes: [
             {
