@@ -41,6 +41,7 @@ public class Program
             builder.Build();
         });
 
+        builder.Services.AddApplicationInsightsTelemetry();
         builder.Services.AddLogging();
         builder.Services.AddMemoryCache();
         builder.Services.AddWebhookRouter(builder.Configuration);
