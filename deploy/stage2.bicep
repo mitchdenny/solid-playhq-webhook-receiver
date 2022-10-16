@@ -153,7 +153,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
                 port: 3000
               }
               initialDelaySeconds: 7
-              periodSeconds: 3
+              periodSeconds: 10
             }
             {
               type: 'Readiness'
@@ -162,7 +162,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
                 port: 3000
               }
               initialDelaySeconds: 30
-              periodSeconds: 3
+              periodSeconds: 10
             }
           ]
         }
