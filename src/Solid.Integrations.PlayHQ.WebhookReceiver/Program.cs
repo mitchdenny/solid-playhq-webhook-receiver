@@ -8,6 +8,7 @@ using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Options;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 namespace Solid.Integrations.PlayHQ.WebhookReceiver;
 
@@ -46,6 +47,8 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddWebhookRouter(builder.Configuration);
         builder.Services.AddAzureAppConfiguration();
+
+        builder.Logging.AddApplicationInsights();
 
         var app = builder.Build();
         app.UseAzureAppConfiguration();
