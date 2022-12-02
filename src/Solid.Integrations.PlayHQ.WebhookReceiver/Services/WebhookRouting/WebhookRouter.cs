@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Solid.Integrations.PlayHQ.WebhookReceiver.Helpers;
 using System.Data;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.Xml;
 using System.Text.Json;
 
@@ -44,27 +45,79 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
 
         private bool TryGetPlayingSurfaceMapping(RoutingRule rule, JsonDocument body, out PlayingSurfaceMapping? mapping)
         {
-            // TODO: Need to add code here to translate from game ID to playing surface
-            //       to figure out the right way to route. For the time being we are just
-            //       going to ignore this and return the Guid.Empty() matching rule.
-            Guid playingSurfaceId = Guid.Empty;
+            mapping = null;
 
-            if (rule.Mappings == null || !rule.Mappings.ContainsKey(playingSurfaceId.ToString()))
+            if (!body.RootElement.TryGetProperty("messageId", out var messageId))
             {
-                logger.LogInformation(
-                    "Could not find playing surface mapping {playingSurfaceId}.", playingSurfaceId);
-                mapping = null;
+                logger.LogWarning("Could not find messageId for webhook event payload.");
                 return false;
             }
 
-            mapping = rule.Mappings[playingSurfaceId.ToString()];
-            logger.LogInformation(
-                "Found playing surface mapping {playingSurfaceId} with namespace {eventHubsNamespace} and name {eventHubName}.",
-                playingSurfaceId,
-                mapping.EventHubsNamespace,
-                mapping.EventHubName
-                );
-            return true;
+            if (!body.RootElement.TryGetProperty("filters", out var filtersProperty))
+            {
+                logger.LogWarning("Filter property missing from messageId: {messageId} ", messageId);
+                return false;
+            }
+
+            if (filtersProperty.ValueKind != JsonValueKind.Array)
+            {
+                logger.LogWarning("Filter property not an array on messageId: {messageId}", messageId);
+                return false;
+            }
+
+            if (filtersProperty.GetArrayLength() == 0)
+            {
+                logger.LogWarning("Filter property array has no items on messageId: {messageId}", messageId);
+                return false;
+            }
+
+            foreach (var filter in filtersProperty.EnumerateArray())
+            {
+                if (!filter.TryGetProperty("entityType", out var entityTypeProperty))
+                {
+                    logger.LogWarning("Filter does not contain entityType property on messageId: {messageId}", messageId);
+                    continue;
+                }
+
+                if (entityTypeProperty.GetString() != "PLAYING_SURFACE")
+                {
+                    logger.LogInformation("Filter entityType property is not PLAYING_SURFACE.");
+                    continue;
+                }
+
+                if (!filter.TryGetProperty("entityId", out var entityId))
+                {
+                    logger.LogWarning("Filter does not contain an entityId on messageId: {messageId}", messageId);
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(entityId.GetString()))
+                {
+                    logger.LogWarning("Filter entityId property is null or empty on messageId: {messageId}", messageId);
+                    continue;
+                }
+
+                var playingSurfaceId = entityId.GetString()!;
+
+                if (rule.Mappings == null || !rule.Mappings.ContainsKey(playingSurfaceId))
+                {
+                    logger.LogInformation(
+                        "Could not find playing surface mapping {playingSurfaceId}.", playingSurfaceId);
+                    mapping = null;
+                    continue;
+                }
+
+                mapping = rule.Mappings[playingSurfaceId];
+                logger.LogInformation(
+                    "Found playing surface mapping {playingSurfaceId} with namespace {eventHubsNamespace} and name {eventHubName}.",
+                    playingSurfaceId,
+                    mapping.EventHubsNamespace,
+                    mapping.EventHubName
+                    );
+                return true;
+            }
+
+            return false;
         }
 
         private EventHubProducerClient GetEventHubProducerClient(string eventHubsNamespace, string eventHubName)
