@@ -93,7 +93,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
             var routeAsyncScopeProperties = new Dictionary<string, object>()
             {
                 { "WebhookId", webhookId },
-                { "Body", body },
+                { "Body", body.RootElement.ToString() },
                 { "Signature", signature }
             };
 
