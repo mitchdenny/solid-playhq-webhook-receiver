@@ -156,24 +156,35 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
 
         public async Task<PlayingSurfaceConfiguration> GetPlayingSurfaceConfigurationAsync(Guid tenantId, Guid playingSurfaceId, string requestUri, string nonce, DateTimeOffset expiry, string signature, CancellationToken cancellationToken)
         {
-            var rule = GetRoutingRule(tenantId);
-
-            if (!TryGetPlayingSurfaceMapping(rule, playingSurfaceId.ToString(), out var mapping))
+            var routeAsyncScopeProperties = new Dictionary<string, object>()
             {
-                throw new WebhookRouterException("No playing surface mapping.");
-            }
-
-            if (!SignatureHelper.IsValidSignature(requestUri.ToString(), mapping.SharedSecret, signature))
-            {
-                throw new WebhookRouterException("Invalid signature.");
-            }
-
-            var playingSurfaceConfiguration = new PlayingSurfaceConfiguration()
-            {
-                ConnectionString = mapping.ConnectionString
+                { "TenantId", tenantId },
+                { "PlayingSurfaceId", playingSurfaceId },
+                { "RequestUri", requestUri },
+                { "Signature", signature }
             };
 
-            return playingSurfaceConfiguration;
+            using (logger.BeginScope(routeAsyncScopeProperties))
+            {
+                var rule = GetRoutingRule(tenantId);
+
+                if (!TryGetPlayingSurfaceMapping(rule, playingSurfaceId.ToString(), out var mapping))
+                {
+                    throw new WebhookRouterException("No playing surface mapping.");
+                }
+
+                if (!SignatureHelper.IsValidSignature(requestUri.ToString(), mapping.SharedSecret, signature))
+                {
+                    throw new WebhookRouterException("Invalid signature.");
+                }
+
+                var playingSurfaceConfiguration = new PlayingSurfaceConfiguration()
+                {
+                    ConnectionString = mapping.ConnectionString
+                };
+
+                return playingSurfaceConfiguration;
+            }
         }
 
         public async Task RouteAsync(Guid webhookId, JsonDocument body, string signature, CancellationToken cancellationToken = default)
