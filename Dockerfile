@@ -6,11 +6,8 @@ EXPOSE 3000
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Solid.Integrations.PlayHQ.WebhookReceiver.csproj", "Solid.Integrations.PlayHQ.WebhookReceiver/"]
-COPY ["Solid.Integrations.PlayHQ.Common.csproj", "Solid.Integrations.PlayHQ.Common/"]
+COPY ["src", "."]
 RUN dotnet restore "Solid.Integrations.PlayHQ.WebhookReceiver/Solid.Integrations.PlayHQ.WebhookReceiver.csproj"
-COPY . Solid.Integrations.PlayHQ.WebhookReceiver/
-COPY . Solid.Integrations.PlayHQ.Common/
 WORKDIR "/src/Solid.Integrations.PlayHQ.WebhookReceiver"
 RUN dotnet build "Solid.Integrations.PlayHQ.WebhookReceiver.csproj" -c Release -o /app/build
 
