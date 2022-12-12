@@ -8,8 +8,8 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Solid.Integrations.PlayHQ.WebhookReceiver.csproj", "Solid.Integrations.PlayHQ.WebhookReceiver/"]
 RUN dotnet restore "Solid.Integrations.PlayHQ.WebhookReceiver/Solid.Integrations.PlayHQ.WebhookReceiver.csproj"
-COPY ["Solid.Integrations.PlayHQ.WebhookReceiver.csproj", "Solid.Integrations.PlayHQ.Common/"]
-RUN dotnet restore "Solid.Integrations.PlayHQ.WebhookReceiver/Solid.Integrations.PlayHQ.Common.csproj"
+COPY ["Solid.Integrations.PlayHQ.Common.csproj", "Solid.Integrations.PlayHQ.Common/"]
+RUN dotnet restore "Solid.Integrations.PlayHQ.Common/Solid.Integrations.PlayHQ.Common.csproj"
 COPY . Solid.Integrations.PlayHQ.WebhookReceiver/
 COPY . Solid.Integrations.PlayHQ.Common/
 WORKDIR "/src/Solid.Integrations.PlayHQ.WebhookReceiver"
