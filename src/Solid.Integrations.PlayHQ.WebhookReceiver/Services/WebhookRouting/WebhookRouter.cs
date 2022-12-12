@@ -3,7 +3,7 @@ using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Solid.Integrations.PlayHQ.WebhookReceiver.Helpers;
+using Solid.Integrations.PlayHQ.Common;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.Xml;
@@ -25,7 +25,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
             this.options.OnChange(OnWebhookRoutingOptionsChange);
         }
 
-        private void OnWebhookRoutingOptionsChange(WebhookRoutingOptions options, string data)
+        private void OnWebhookRoutingOptionsChange(WebhookRoutingOptions options, string? data)
         {
             logger.LogInformation("Configuration updated!");
         }
@@ -41,6 +41,20 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
             var rule = options.CurrentValue.Rules[webhookId.ToString()];
             logger.LogInformation("Found routing rule for {webhookId}", webhookId);
             return rule;
+        }
+
+        private bool TryGetPlayingSurfaceMapping(RoutingRule rule, string playingSurfaceId, out PlayingSurfaceMapping? mapping)
+        {
+            if (rule.Mappings != null && rule.Mappings.ContainsKey(playingSurfaceId))
+            {
+                mapping = rule.Mappings[playingSurfaceId];
+                return true;
+            }
+            else
+            {
+                mapping = null;
+                return false;
+            }
         }
 
         private bool TryGetPlayingSurfaceMapping(RoutingRule rule, JsonDocument body, out PlayingSurfaceMapping? mapping)
@@ -99,7 +113,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
 
                 var playingSurfaceId = entityId.GetString()!;
 
-                if (rule.Mappings == null || !rule.Mappings.ContainsKey(playingSurfaceId))
+                if (!TryGetPlayingSurfaceMapping(rule, playingSurfaceId, out mapping))
                 {
                     logger.LogInformation(
                         "Could not find playing surface mapping {playingSurfaceId}.", playingSurfaceId);
@@ -107,7 +121,6 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
                     continue;
                 }
 
-                mapping = rule.Mappings[playingSurfaceId];
                 logger.LogInformation(
                     "Found playing surface mapping {playingSurfaceId} with namespace {eventHubsNamespace} and name {eventHubName}.",
                     playingSurfaceId,
@@ -138,7 +151,29 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
                 return new EventHubProducerClient(eventHubsNamespace, eventHubName, new DefaultAzureCredential()); // TODO: Should we reuse the credential?
             });
 
-            return client;
+            return client!;
+        }
+
+        public async Task<PlayingSurfaceConfiguration> GetPlayingSurfaceConfigurationAsync(Guid tenantId, Guid playingSurfaceId, string requestUri, string nonce, DateTimeOffset expiry, string signature, CancellationToken cancellationToken)
+        {
+            var rule = GetRoutingRule(tenantId);
+
+            if (!TryGetPlayingSurfaceMapping(rule, playingSurfaceId.ToString(), out var mapping))
+            {
+                throw new WebhookRouterException("No playing surface mapping.");
+            }
+
+            if (!SignatureHelper.IsValidSignature(requestUri.ToString(), mapping.SharedSecret, signature))
+            {
+                throw new WebhookRouterException("Invalid signature.");
+            }
+
+            var playingSurfaceConfiguration = new PlayingSurfaceConfiguration()
+            {
+                ConnectionString = mapping.ConnectionString
+            };
+
+            return playingSurfaceConfiguration;
         }
 
         public async Task RouteAsync(Guid webhookId, JsonDocument body, string signature, CancellationToken cancellationToken = default)
@@ -157,7 +192,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
                 var rule = GetRoutingRule(webhookId);
                 var payload = body.RootElement.ToString();
 
-                var isSignatureValid = SignatureValidator.IsValidSignature(
+                var isSignatureValid = SignatureHelper.IsValidSignature(
                     payload,
                     rule.WebhookSecret ?? throw new WebhookRouterException("Webhook secret was null"),
                     signature

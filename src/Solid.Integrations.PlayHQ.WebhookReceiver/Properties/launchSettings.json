@@ -5,7 +5,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CONFIG_URL": "https://configzmupjjg3bq2xe.azconfig.io",
+        "CONFIG_URL": "https://configwdmgu3547b2tq.azconfig.io",
         "AZURE_TENANT_ID": "55612886-06c3-4890-a45f-49b04c9071b0",
         "AZURE_CLIENT_ID": "d951e33f-d0bf-4044-93c8-aba96d673e7e",
         "AZURE_CLIENT_SECRET": "Q188Q~LqRHb82mzI2LhtdzafnfxgUT6~uBYkicTQ"

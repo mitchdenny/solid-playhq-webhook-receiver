@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solid.Integrations.PlayHQ.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solid.Integrations.PlayHQ.WebhookReceiver.Tests", "Solid.Integrations.PlayHQ.WebhookReceiver.Tests\Solid.Integrations.PlayHQ.WebhookReceiver.Tests.csproj", "{4CA152B3-23E7-42A7-96B6-04D1110573F8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solid.Integrations.PlayHQ.WebhookClient", "Solid.Integrations.PlayHQ.WebhookClient\Solid.Integrations.PlayHQ.WebhookClient.csproj", "{15AF2A42-3C97-469F-B0B2-EB4B5F3686DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solid.Integrations.PlayHQ.Common", "Solid.Integrations.PlayHQ.Common\Solid.Integrations.PlayHQ.Common.csproj", "{171D5966-1C09-4720-AAD5-22D4797D6F00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CA152B3-23E7-42A7-96B6-04D1110573F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15AF2A42-3C97-469F-B0B2-EB4B5F3686DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AF2A42-3C97-469F-B0B2-EB4B5F3686DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AF2A42-3C97-469F-B0B2-EB4B5F3686DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AF2A42-3C97-469F-B0B2-EB4B5F3686DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{171D5966-1C09-4720-AAD5-22D4797D6F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171D5966-1C09-4720-AAD5-22D4797D6F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171D5966-1C09-4720-AAD5-22D4797D6F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171D5966-1C09-4720-AAD5-22D4797D6F00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

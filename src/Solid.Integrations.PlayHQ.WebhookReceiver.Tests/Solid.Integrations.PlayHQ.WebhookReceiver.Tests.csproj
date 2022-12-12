@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -22,14 +22,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Solid.Integrations.PlayHQ.Common\Solid.Integrations.PlayHQ.Common.csproj" />
     <ProjectReference Include="..\Solid.Integrations.PlayHQ.WebhookReceiver\Solid.Integrations.PlayHQ.WebhookReceiver.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Helpers\TestData\formatted-score-event.json">
+    <None Update="TestData\formatted-score-event.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Helpers\TestData\score-event.json">
+    <None Update="TestData\score-event.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -5,5 +5,6 @@
         public string? EventHubsNamespace { get; set; }
         public string? EventHubName { get; set; }
         public string? SharedSecret { get; set; }
+        public string? ConnectionString { get; set;  }
     }
 }
