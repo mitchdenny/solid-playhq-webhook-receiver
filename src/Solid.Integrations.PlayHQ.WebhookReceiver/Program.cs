@@ -98,8 +98,7 @@ public class Program
     {
         try
         {
-            var expiryDateTime = DateTimeOffset.FromUnixTimeSeconds(expiry);
-            var playingSurfaceConfiguration = await webhookRouter.GetPlayingSurfaceConfigurationAsync(tenantId, playingSurfaceId, request.GetUri().AbsoluteUri, nonce, expiryDateTime, signature, cancellationToken);
+            var playingSurfaceConfiguration = await webhookRouter.GetPlayingSurfaceConfigurationAsync(tenantId, playingSurfaceId, nonce, expiry, signature, cancellationToken);
             return TypedResults.Ok(playingSurfaceConfiguration);
         }
         catch (WebhookRouterException ex) when (ex.Message == "Invalid signature.")

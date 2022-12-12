@@ -154,13 +154,12 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
             return client!;
         }
 
-        public async Task<PlayingSurfaceConfiguration> GetPlayingSurfaceConfigurationAsync(Guid tenantId, Guid playingSurfaceId, string requestUri, string nonce, DateTimeOffset expiry, string signature, CancellationToken cancellationToken)
+        public async Task<PlayingSurfaceConfiguration> GetPlayingSurfaceConfigurationAsync(Guid tenantId, Guid playingSurfaceId, string nonce, int expiry, string signature, CancellationToken cancellationToken)
         {
             var routeAsyncScopeProperties = new Dictionary<string, object>()
             {
                 { "TenantId", tenantId },
                 { "PlayingSurfaceId", playingSurfaceId },
-                { "RequestUri", requestUri },
                 { "Signature", signature }
             };
 
@@ -173,7 +172,8 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
                     throw new WebhookRouterException("No playing surface mapping.");
                 }
 
-                if (!SignatureHelper.IsValidSignature(requestUri.ToString(), mapping.SharedSecret, signature))
+                var signedContent = $"{tenantId} {playingSurfaceId} {nonce} {expiry}";
+                if (!SignatureHelper.IsValidSignature(signedContent, mapping.SharedSecret, signature))
                 {
                     throw new WebhookRouterException("Invalid signature.");
                 }

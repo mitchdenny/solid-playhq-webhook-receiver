@@ -39,11 +39,12 @@ namespace Solid.Integrations.PlayHQ.WebhookClient
         {
             var nonce = Guid.NewGuid();
             var expiry = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeSeconds(); // allow for 5 minutes drift
-            var requestUrl = $"{endpoint}tenants/{tenantId}/playing-surfaces/{playingSurfaceId}/config?nonce={nonce}&expiry={expiry}";
-            var signature = SignatureHelper.GenerateSignature(requestUrl, secret);
+            var signedContent = $"{tenantId} {playingSurfaceId} {nonce} {expiry}";
+            var signature = SignatureHelper.GenerateSignature(signedContent, secret);
 
             using var client = new HttpClient();
             
+            var requestUrl = $"{endpoint}tenants/{tenantId}/playing-surfaces/{playingSurfaceId}/config?nonce={nonce}&expiry={expiry}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
             request.Headers.Add("Signature", signature);
             var response = await client.SendAsync(request);
