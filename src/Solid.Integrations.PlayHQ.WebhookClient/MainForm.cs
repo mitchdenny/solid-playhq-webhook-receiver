@@ -83,6 +83,10 @@ namespace Solid.Integrations.PlayHQ.WebhookClient
                     });
                 }
             }
+            catch (TaskCanceledException)
+            {
+                // Swallow!
+            }
             catch (Exception ex)
             {
                 this.Invoke(() =>
