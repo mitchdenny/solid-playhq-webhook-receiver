@@ -105,7 +105,19 @@ public class Program
         {
             return Results.Unauthorized();
         }
+        catch (WebhookRouterException ex) when (ex.Message == "Invalid nonce.")
+        {
+            return Results.Unauthorized();
+        }
+        catch (WebhookRouterException ex) when (ex.Message == "Invalid expiry.")
+        {
+            return Results.Unauthorized();
+        }
         catch (WebhookRouterException ex) when (ex.Message == "No playing surface mapping.")
+        {
+            return Results.NotFound();
+        }
+        catch (WebhookRouterException ex) when (ex.Message == "No routing rule.")
         {
             return Results.NotFound();
         }

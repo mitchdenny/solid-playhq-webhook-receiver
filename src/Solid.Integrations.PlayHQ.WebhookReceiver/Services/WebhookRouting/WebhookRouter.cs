@@ -16,6 +16,7 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
         private ILogger<WebhookRouter> logger;
         private IOptionsMonitor<WebhookRoutingOptions> options;
         private IMemoryCache memoryCache;
+        private HashSet<string> noncesWithExpiry = new HashSet<string>();
 
         public WebhookRouter(ILogger<WebhookRouter> logger, IOptionsMonitor<WebhookRoutingOptions> options, IMemoryCache memoryCache)
         {
@@ -154,6 +155,29 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
             return client!;
         }
 
+        private bool IsValidNonce(string nonce)
+        {
+            if (noncesWithExpiry.Contains(nonce))
+            {
+                return false;
+            }
+            else
+            {
+                noncesWithExpiry.Add(nonce);
+                return true;
+            }
+        }
+
+        public bool IsValidExpiry(int expiry)
+        {
+            var clockDriftAllowanceTimeSpan = TimeSpan.FromSeconds(options.CurrentValue.ClockDriftAllowanceInSeconds);
+            var expiryDateTime = DateTimeOffset.FromUnixTimeSeconds(expiry);
+            var validAfter = DateTimeOffset.UtcNow.Subtract(clockDriftAllowanceTimeSpan);
+            var validBefore = DateTimeOffset.UtcNow.Add(clockDriftAllowanceTimeSpan);
+
+            return expiryDateTime > validAfter && expiryDateTime < validBefore;
+        }
+
         public async Task<PlayingSurfaceConfiguration> GetPlayingSurfaceConfigurationAsync(Guid tenantId, Guid playingSurfaceId, string nonce, int expiry, string signature, CancellationToken cancellationToken)
         {
             var routeAsyncScopeProperties = new Dictionary<string, object>()
@@ -165,6 +189,9 @@ namespace Solid.Integrations.PlayHQ.WebhookReceiver.Services.WebhookRouting
 
             using (logger.BeginScope(routeAsyncScopeProperties))
             {
+                if (!IsValidNonce(nonce)) throw new WebhookRouterException("Invalid nonce.");
+                if (!IsValidExpiry(expiry)) throw new WebhookRouterException("Invalid expiry.");
+
                 var rule = GetRoutingRule(tenantId);
 
                 if (!TryGetPlayingSurfaceMapping(rule, playingSurfaceId.ToString(), out var mapping))
