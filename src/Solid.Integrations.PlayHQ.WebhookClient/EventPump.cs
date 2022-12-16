@@ -62,6 +62,14 @@ namespace Solid.Integrations.PlayHQ.WebhookClient
             return playingSurfaceConfiguration!.ConnectionString;
         }
 
+        private async Task WriteEventAsync(string payload, CancellationToken cancellationToken)
+        {
+            var document = JsonDocument.Parse(payload);
+            var eventType = document.RootElement.GetProperty("eventType").GetString();
+            var outputFilePath = $"{outputPath}\\{eventType}.json";
+            await File.WriteAllTextAsync(outputFilePath, payload, cancellationToken);
+        }
+
         public async Task RunAsync(CancellationToken cancellationToken)
         {
             try
@@ -81,7 +89,7 @@ namespace Solid.Integrations.PlayHQ.WebhookClient
                 {
                     var payload = @event.Data.EventBody.ToString();
                     Console.WriteLine(payload);
-                    await File.WriteAllTextAsync(outputPath.FullName, payload, cancellationToken);
+                    await WriteEventAsync(payload, cancellationToken);
                 }
             }
             catch (TaskCanceledException)
