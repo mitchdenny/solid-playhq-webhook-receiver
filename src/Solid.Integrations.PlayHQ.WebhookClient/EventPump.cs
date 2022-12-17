@@ -46,7 +46,7 @@ namespace Solid.Integrations.PlayHQ.WebhookClient
         private async Task<string> GetConnectionStringAsync(Uri endpoint, Guid tenantId, Guid playingSurfaceId, string secret, CancellationToken cancellationToken)
         {
             var nonce = Guid.NewGuid();
-            var expiry = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeSeconds(); // allow for 5 minutes drift
+            var expiry = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // allow for 5 minutes drift
             var signedContent = $"{tenantId} {playingSurfaceId} {nonce} {expiry}";
             var signature = SignatureHelper.GenerateSignature(signedContent, secret);
 
