@@ -1,0 +1,36 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pr:
+- main
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildReceiver
+  - job: BuildClient
+- stage: Test
+  dependsOn: Build
+  - deployment: DeployReceiver
+    environment: Test
+  - deployment: DeployClient
+    environment: Test
+- stage: Preview
+  condition: and(successful(), eq(variables['Build.Reason'], 'IndividualCI'))
+  dependsOn: Test
+  - deployment: DeployReceiver
+    environment: Preview
+  - deployment: DeployClient
+    environment: Preview
+- stage: Production
+  condition: and(successful(), eq(variables['Build.Reason'], 'IndividualCI'))
+  dependsOn: Preview
+  - deployment: DeployReceiver
+    environment: Production
+  - deployment: DeployClient
+    environment: Production
