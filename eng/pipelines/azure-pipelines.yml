@@ -13,24 +13,19 @@ stages:
 - stage: Build
   jobs:
   - job: BuildReceiver
-  - job: BuildClient
-- stage: Test
-  dependsOn: Build
-  - deployment: DeployReceiver
-    environment: Test
-  - deployment: DeployClient
-    environment: Test
-- stage: Preview
-  condition: and(successful(), eq(variables['Build.Reason'], 'IndividualCI'))
-  dependsOn: Test
-  - deployment: DeployReceiver
-    environment: Preview
-  - deployment: DeployClient
-    environment: Preview
-- stage: Production
-  condition: and(successful(), eq(variables['Build.Reason'], 'IndividualCI'))
-  dependsOn: Preview
-  - deployment: DeployReceiver
-    environment: Production
-  - deployment: DeployClient
-    environment: Production
+    variables:
+      containerOutputPath: $(Pipeline.Worksapce)/container.tar.gz
+    steps:
+    - script: |
+        mkdir $(containerOutputPath)
+      displayName: Prepare workspace
+    - script: |
+        docker build . --tag solid/integrations/play-hq/webhook-receiver:$(Build.SourceVersion)
+      display: Build container
+    - script: |
+        docker save --output $(containerOutputPath) solid/integrations/play-hq/webhook-receiver:$(Build.SourceVersion)
+      display: Export container
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(containerOutputPath)
+      displayName: Upload container
